@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+//User structure for User document
 type User struct {
 	UserID            primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	FirstName         string             `json:"firstName" bson:"firstName"`
@@ -18,6 +19,7 @@ type User struct {
 	CreatedAt         time.Time          `json:"CreatedAt" bson:"CreatedAt"`
 }
 
+//Address structure for sub document inside User Structure
 type Address struct {
 	AddressLine1 string `json:"addressLine1" bson:"addressLine1"`
 	City         string `json:"city" bson:"city"`
@@ -25,6 +27,7 @@ type Address struct {
 	Zipcode      string `json:"zipcode" bson:"zipcode"`
 }
 
+//DBConfig has information required to connect to DB
 type DBConfig struct {
 	Host     string
 	User     string
@@ -33,13 +36,15 @@ type DBConfig struct {
 	Port     string
 }
 
+//Response has the message and code
 type Response struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 
+//CreateResponse - response structure for create where ID is sent as response
 type CreateResponse struct {
-	ID      primitive.ObjectID `json:"productID"`
+	ID      primitive.ObjectID `json:"userID"`
 	Code    int                `json:"code"`
 	Message string             `json:"message"`
 }

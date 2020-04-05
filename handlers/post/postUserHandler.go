@@ -1,6 +1,8 @@
 package post
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -15,7 +17,7 @@ type PostHandler struct{}
 func (p *PostHandler) PostUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	var user model.User
-
+	//Reading the data from the JSON body
 	body, err := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &user)
 
@@ -24,6 +26,10 @@ func (p *PostHandler) PostUserHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 	}
 
+	//Encrypting the password and storing it in database
+	user.EncryptedPassword = Encrypt(user.EncryptedPassword)
+
+	//Call to the database query to create a user
 	result, err := interfaces.DBClient.CreateUserQuery(user)
 	if err != nil {
 		response := ResponseMapper(400, "error inserting records")
@@ -35,6 +41,14 @@ func (p *PostHandler) PostUserHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//Function to encrypt the password
+func Encrypt(pwd string) string {
+	h := sha1.New()
+	h.Write([]byte(pwd))
+	sha1_hash := hex.EncodeToString(h.Sum(nil))
+	return sha1_hash
+}
+
 func ResponseMapper(code int, message string) model.Response {
 	var response model.Response
 	response = model.Response{
@@ -44,6 +58,7 @@ func ResponseMapper(code int, message string) model.Response {
 	return response
 }
 
+//Response mapper for create - sending the ID of the user created.
 func ResponseMapperCreate(code int, message string, id primitive.ObjectID) model.CreateResponse {
 	var response model.CreateResponse
 	response = model.CreateResponse{

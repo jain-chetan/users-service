@@ -2,7 +2,6 @@ package put
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/jain-chetan/users-service/interfaces"
@@ -12,16 +11,26 @@ import (
 type PutHandler struct{}
 
 func (p *PutHandler) PutUserHandler(w http.ResponseWriter, r *http.Request) {
-	var user model.User
+
 	userID := r.Header.Get("userID")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	body, err := ioutil.ReadAll(r.Body)
-	json.Unmarshal(body, &user)
+
+	//Getting the user details of the ID passed
+	user, err := interfaces.DBClient.GetUserQuery(userID)
+	if err != nil {
+		response := ResponseMapper(400, "error in getting data")
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	//Decoding the body from the Json structure
+	err = json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		response := ResponseMapper(400, "error in getting response")
 		json.NewEncoder(w).Encode(response)
 	}
 
+	//call to database query to update the fields of user
 	err = interfaces.DBClient.UpdateUserQuery(userID, user)
 
 	if err != nil {
@@ -33,6 +42,7 @@ func (p *PutHandler) PutUserHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//ResponseMapper - function to send back the response
 func ResponseMapper(code int, message string) model.Response {
 	var response model.Response
 	response = model.Response{

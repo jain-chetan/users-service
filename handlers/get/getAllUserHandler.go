@@ -11,10 +11,13 @@ import (
 type GetHandler struct{}
 
 func (g *GetHandler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
+
+	//Getting the userID from the headers
 	userID := r.Header.Get("userID")
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
+	//Call to the database query to get the User details
 	userDetails, err := interfaces.DBClient.GetUserQuery(userID)
 	if err != nil {
 		response := ResponseMapper(400, "Bad Request")

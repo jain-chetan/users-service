@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+//UpdateUserQuery - Database query method to update user
 func (dc *DBRepo) UpdateUserQuery(userID string, user model.User) error {
 
 	collection := dc.DBClient.Database("shopping-cart").Collection("Users")

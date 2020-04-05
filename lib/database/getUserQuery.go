@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+//GetUserQuery - Query method to get the User details
 func (dc *DBRepo) GetUserQuery(userID string) (model.User, error) {
 	var user model.User
 
@@ -30,7 +31,8 @@ func (dc *DBRepo) GetUserQuery(userID string) (model.User, error) {
 		return user, err
 	}
 
-	//Returning the data
+	user.EncryptedPassword = ""
+
 	return user, nil
 
 }

@@ -12,9 +12,11 @@ type DeleteHandler struct{}
 
 func (d *DeleteHandler) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
+	//Getting the userID from the headers
 	userID := r.Header.Get("userID")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
+	//Call to database query for deleting a user
 	err := interfaces.DBClient.DeleteUserQuery(userID)
 	if err != nil {
 		response := ResponseMapper(400, "Database error")

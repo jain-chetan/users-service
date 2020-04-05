@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+//CreateUserQuery - Database query method to create a user
 func (dc *DBRepo) CreateUserQuery(user model.User) (model.CreateResponse, error) {
 	var result model.CreateResponse
 	emptyResponse := model.CreateResponse{}

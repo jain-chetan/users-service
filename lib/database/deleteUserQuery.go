@@ -8,12 +8,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+//DeleteUserQuery - Deletes the particular user based on the ID passed
 func (dc *DBRepo) DeleteUserQuery(userID string) error {
 	collection := dc.DBClient.Database("shopping-cart").Collection("Users")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	Id, err := primitive.ObjectIDFromHex(userID)
+	ID, err := primitive.ObjectIDFromHex(userID)
 	if err != nil {
 		return err
 	}
@@ -24,7 +25,7 @@ func (dc *DBRepo) DeleteUserQuery(userID string) error {
 		}},
 	}
 
-	_, errUpdate := collection.UpdateOne(ctx, bson.D{primitive.E{Key: "_id", Value: Id}}, setDeleteFlag)
+	_, errUpdate := collection.UpdateOne(ctx, bson.D{primitive.E{Key: "_id", Value: ID}}, setDeleteFlag)
 	if errUpdate != nil {
 		return errUpdate
 	}

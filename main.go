@@ -18,6 +18,7 @@ func main() {
 		log.Fatal("DB Error ", err)
 	}
 
+	//router initialization
 	router := mux.NewRouter()
 
 	router.HandleFunc("/users", api.Post.PostUserHandler).Methods("POST")
