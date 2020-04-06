@@ -16,6 +16,14 @@ func (d *DeleteHandler) DeleteUserHandler(w http.ResponseWriter, r *http.Request
 	userID := r.Header.Get("userID")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
+	userExists := interfaces.DBClient.CheckUserExist(userID)
+
+	if !userExists {
+		response := ResponseMapper(400, "No records found")
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	//Call to database query for deleting a user
 	err := interfaces.DBClient.DeleteUserQuery(userID)
 	if err != nil {

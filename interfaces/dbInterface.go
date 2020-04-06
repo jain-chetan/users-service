@@ -14,4 +14,5 @@ type DBInteractions interface {
 	UpdateUserQuery(userID string, user model.User) error
 	DeleteUserQuery(string) error
 	GetUserQuery(string) (model.User, error)
+	CheckUserExist(userID string) bool
 }

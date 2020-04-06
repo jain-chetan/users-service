@@ -17,6 +17,8 @@ type PostHandler struct{}
 func (p *PostHandler) PostUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	var user model.User
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	//Reading the data from the JSON body
 	body, err := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &user)
